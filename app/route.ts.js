@@ -1,17 +1,13 @@
-import type { NextRequest } from "next/server";
+export const runtime = "edge"; // ✅ required for Edge Functions
 
-export const config = {
-  runtime: "edge"
-};
+export async function GET(request: Request) {
+  const url = new URL(request.url);
 
-export default async function handler(req: NextRequest) {
-  const target = "https://gesseh.com";
-  const url = new URL(req.url);
-  const upstream = target + url.pathname + url.search;
+  // Example target (replace with your logic)
+  const target = "https://gesseh.com" + url.pathname + url.search;
 
-  const resp = await fetch(upstream, {
-    method: req.method,
-    headers: req.headers
+  const resp = await fetch(target, {
+    headers: { "User-Agent": "VercelEdge/1.0" }
   });
 
   return new Response(resp.body, {
